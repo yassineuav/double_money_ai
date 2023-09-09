@@ -41,10 +41,6 @@ export default function Home() {
         <button className="rounded-full w-48 h-10 bg-sky-500 text-white">Calul</button>
         </div>
         
-         
-
-
-
 
       </div>
 
