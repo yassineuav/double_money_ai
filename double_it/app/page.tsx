@@ -1,6 +1,27 @@
+"use client"
 import Image from 'next/image'
+import { useState } from 'react'
 
 export default function Home() {
+  const [amount, setAmount] = useState("100")
+
+  const [data, setData] = useState([])
+
+
+  const handleCalcul = () => {
+    try{
+      const balance = parseInt(amount)
+      console.log("balance", balance)
+      for(var i =0; i <= 10;i++){
+        setData([...data, i])  
+      }
+
+    }catch(e){
+      console.log(e)
+    }
+
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm   lg:flex">
@@ -34,13 +55,24 @@ export default function Home() {
           <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
             Your invest Amount
           </span>
-          <input type="text" name="amount" className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" placeholder="your invest" />
+          <input 
+          onChange={(e)=>{setAmount(e.target.value)}}
+          type="text" name="amount" className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1" placeholder="your invest" />
           </label>
         </div>
         <div>
-        <button className="rounded-full w-48 h-10 bg-sky-500 text-white">Calul</button>
+        <button 
+        onClick={handleCalcul}
+        className="rounded-full w-48 h-10 bg-sky-500 text-white m-2 ">Calulate</button>
         </div>
         
+
+      </div>
+
+      <div className='grid grid-rows '>
+        {data && data.map((item, index)=>(
+          <div key={index}>{item}</div>
+        ))}
 
       </div>
 
