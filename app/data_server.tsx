@@ -49,7 +49,7 @@ export const fetch = (amount) => {
     // Convert the number to a currency format
     const weekdays = listWeekdaysToEndOfMonth();
     for (var i = 0; i < weekdays.length; i++) {
-      newData = [...newData, {"id":i, "balance":toMoney(balance), "current":toMoney(100), "day":weekdays[i].day, "date":weekdays[i].date.replace('2023', '')} ];
+      newData = [...newData, {"id":i, "target":toMoney(balance), "current":toMoney(100), "day":weekdays[i].day, "date":weekdays[i].date.replace('2023', '')} ];
       balance = balance * doublePercent;
       // console.log("day", weekdays[i].date, weekdays[i].date)
     }
