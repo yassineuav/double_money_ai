@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* Add styles for dark mode here */
+.dark {
+  /* Dark mode styles go here */
+  background-color: #121824;
+  color: rgb(188, 191, 183);
+}
