@@ -16,7 +16,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-
   useEffect(() => {
       document.documentElement.classList.add('dark');
     

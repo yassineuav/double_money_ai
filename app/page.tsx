@@ -1,16 +1,18 @@
 "use client";
-import Modal from "@/components/modal";
-import { BalanceType } from "@/types";
-import { useState } from "react";
 
-// interface BalanceType {
-//   balance: string;
-//   date: string;
-//   day: string;
-// }
+import { getFirestore, setDoc ,doc , collection, getDocs, addDoc } from "firebase/firestore";
+ 
+import Modal from "@/components/modal";
+import { BalanceType, MonthsType } from "@/types";
+import { useState, useEffect } from "react";
+import firebase_app from "@/components/firebaseConfig";
+import { calculateMonthData } from "./data_server";
+
+
 
 export default function Home() {
   const [amount, setAmount] = useState("100");
+  const [months, setMonths] = useState<MonthsType[]>([]);
   // const [percent, setPercent] = useState("2");
 
   const [data, setData] = useState<BalanceType[]>([]);
@@ -25,80 +27,81 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  function toMoney(number: number) {
-    return number.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
+  const db = getFirestore(firebase_app)
+
+  async function fetchMonthsData() {  
+    const querySnapshot = await getDocs(collection(db, "double_it"));
+    let newData:BalanceType = []
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data()}`);
+      newData = [...newData, doc.data()];
+    }); 
+    const sortedData = newData.sort((a, b) => a.id - b.id);
+    // console.log("no data", querySnapshot.empty)
+    console.log("data", sortedData)
+    setData(sortedData)
+  }
+
+
+  useEffect( () =>{
+    async function fetchMonths() {  
+      const querySnapshot = await getDocs(collection(db, "months"));
+      let newData:MonthsType[] = []
+      querySnapshot.forEach((doc) => {
+        // console.log(`${doc.id} => ${doc.data().month}`);
+        newData = [...newData, {month:doc.data().month, id:doc.id, active:false}];
+      }); 
+      setMonths(newData)
+    }
+    fetchMonths();
+   } ,[]);
+  
+  
+  const  handleFetchMonthData = async (dataMonth:MonthsType) => {
+    // fetch month data from firebase
+    const updatedMonth = months.map(item => {
+      if (item.id === dataMonth.id) {
+        return { ...item, active:true}; // Update the name for the object with id 2
+      }else{
+        return { ...item, active:false};
+      }
+      // return obj;  // Return unchanged for other objects
     });
-  }
-  function listWeekdaysToEndOfMonth() {
-    const currentDate = new Date(); // Get the current date
-    const currentMonth = currentDate.getMonth(); // Get the current month
-    const weekdays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const weekdaysList = [];
+    
+    setMonths(updatedMonth)
+    fetchMonthsData()
+    // console.log("fetch month data", updatedMonth)
 
-    // Loop through the days of the current month
-    for (let day = currentDate.getDate(); ; day++) {
-      const date = new Date(currentDate.getFullYear(), currentMonth, day);
 
-      // Check if the date is in the same month
-      if (date.getMonth() !== currentMonth) {
-        break; // Exit the loop when the month changes
-      }
-
-      // Check if the date is a weekday (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-        // Weekday (Monday through Friday)
-        weekdaysList.push({
-          date: date.toDateString(),
-          day: weekdays[dayOfWeek],
-        });
-      }
-    }
-
-    return weekdaysList;
-  }
-
-  const handleCalculate = () => {
-    try {
-      let balance = parseInt(amount);
-      let doublePercent = 2;
-      // console.log("balance", balance);
-      let newData: BalanceType[] = [];
-      // Convert the number to a currency format
-      const weekdays = listWeekdaysToEndOfMonth();
-      for (var i = 0; i < weekdays.length; i++) {
-        newData = [
-          ...newData,
-          {
-            id: i+1,
-            target: toMoney(balance),
-            day: weekdays[i].day,
-            date: weekdays[i].date,
-          },
-        ];
-        balance = balance * doublePercent;
-        // console.log("day", weekdays[i].date, weekdays[i].date)
-      }
-      setData(newData);
-      // setData(newData);
-      console.log("new data", newData);
-    } catch (e) {
-      console.log(e);
-    }
-
-    console.log("data", data);
   };
 
+ 
+  const handleCreateMonthData = async () => {
+    // get months -> active id -> get month
+    const currentActiveMonth =  months.find(item => item.active === true);
+
+    console.log("current active month", currentActiveMonth)
+    
+    // calculate month
+    const newData = calculateMonthData("50")
+
+    // console.log("months data", newData)
+
+    // update data doc to firebase
+    
+    newData?.forEach(async (item) =>  {
+  
+      const docRef = await addDoc(collection(db, "double_it"), item);
+      console.log("Document written with ID: ", docRef.id); 
+
+    })
+    
+  }
+
+
+  const handleCalculate = () => {
+
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <Modal isOpen={isModalOpen} onClose={closeModal} />
@@ -109,7 +112,42 @@ export default function Home() {
         </p>
       </div>
 
+      <div className="grid text-center w-full grid-cols-4 gap-2">
+        {months && months.map((item, index) => (
+          <button
+          key={index}
+          onClick={() => handleFetchMonthData(item)}
+          className={`group rounded-md border border-neutral-500 
+          p-2 transition-colors hover:border-blue-700 
+          hover:bg-neutral-600/30 ${ item.active ? "bg-blue-800" : "" }`}
+         
+        >
+          <h2 className={`mb-1 text-md font-semibold`}>
+            {item.month}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              -&gt;
+            </span>
+          </h2>
+          <p className={`m-0 text-sm opacity-50`}>explain steps</p>
+        </button>
+
+        ))}
+        
+      </div>
+
       <div className="grid grid-cols-1 gap-4">
+        { !data ? (
+          <div className="flex flex-col gap-2 justify-center">
+            <div className="text-white text-xlg">
+              No Data for this month
+            </div>
+            <div 
+            onClick={handleCreateMonthData}
+            className="border rounded-md text-white border-blue-400 p-2 text-center bg-emerald-600">
+              create data
+            </div>
+          </div>
+        ) :(
         <table className="w-full bg-gradient-to-b from-slate-900 to-slate-600">
           <thead>
             <tr className="text-white text-center">
@@ -134,7 +172,7 @@ export default function Home() {
                 </tr>
               ))}
           </tbody>
-        </table>
+        </table>)}
       </div>
 
       <div className="border border-blue-300 rounded-md m-1">
@@ -154,13 +192,7 @@ export default function Home() {
               />
             </label>
 
-            <button
-              className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              onClick={openModal}
-            >
-              Open Modal
-            </button>
-
+         
                 <div className="flex flex-row gap-1">
 
 
@@ -182,6 +214,15 @@ export default function Home() {
           
         </div>
       </div>
+
+      <button
+              className="w-28 h-10 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+              onClick={openModal}
+            >
+              Open Modal
+            </button>
+
+      
       <div className="mb-32 grid text-center w-full grid-cols-4 ">
         <a
           href="/"
@@ -197,6 +238,7 @@ export default function Home() {
           </h2>
           <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>explain steps</p>
         </a>
+
       </div>
     </main>
   );

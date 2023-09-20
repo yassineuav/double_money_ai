@@ -5,3 +5,10 @@ export interface BalanceType {
     date?:string;
     day?:string;
 }
+
+
+export interface MonthsType {
+    id:string;
+    month: string;
+    active:boolean;
+}

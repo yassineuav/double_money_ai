@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 
 const Modal = ({ isOpen, onClose }) => {
   return isOpen ? (
