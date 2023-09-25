@@ -1,9 +1,9 @@
 import React from 'react'
 
-const CRUDPage = () => {
+const TargetPage = () => {
   return (
-    <div>CRUDPage item</div>
+    <div>Target page</div>
   )
 }
 
-export default CRUDPage
+export default TargetPage
