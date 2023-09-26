@@ -12,3 +12,10 @@ export interface MonthsType {
     month: string;
     active:boolean;
 }
+
+export interface MessageType {
+    id:number;
+    title: string;
+    message: string;
+    isSuccess:boolean;
+}
