@@ -139,13 +139,15 @@ const MonthModal = ({ isOpen, onClose }) => {
 
   return isOpen ? (
     <div
-      className={`fixed z-50 w-full p-4 inset-0 flex items-center justify-center50 max-h-full${
+      className={`fixed z-50 w-full p-4 inset-0 flex items-center justify-center max-h-full${
         isOpen ? "opacity-100" : "opacity-0 pointer-events-none "
       }`}
     >
-        <div className="grid grid-cols gap-2 w-full rounded-lg shadow bg-gray-700">
-            <div className="flex">
-            <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+        <div className="flex flex-col gap-2 w-full rounded-lg shadow bg-gray-700 justify-center">
+            
+            <div className="flex justify-between mb-4">
+            
+            <h3 className="text-xl m-1 font-medium text-gray-900 dark:text-white">
               Add new Month
             </h3>
           <button
@@ -168,49 +170,51 @@ const MonthModal = ({ isOpen, onClose }) => {
                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
               />
             </svg>
-            <span className="sr-only">Close modal</span>
           </button>
           
            </div>
-          <div className="">
 
-              <div className="flex flex-rows gap-1">
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Enter month name
-                </label>
-                <input
-                  type="text"
-                  name="month"
-                  id="month"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  placeholder="month"
-                />
-              </div>
-
-              <button
-                className="w-full text-white  focus:ring-4 focus:outline-none rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+             <div className="flex flex-col gap-4 w-full  items-center
+             border border-gray-300">
+          <label className="block ">
+            <span className="before:content-['*'] before:mr-1 before:text-red-500 block text-sm font-medium text-slate-400">
+              Enter month
+            </span>
+            
+            <input
+            //   onChange={(e) => { setAmount(e.target.value);}}
+              type="text"
+              name="amount"
+              className="mt-1 p-1 w-40 bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-400 block  rounded-md text-sm focus:ring-1"
+              placeholder="Month"
+            />
+            </label>
+            
+          <button
+                className="w-40 h-7 text-white  focus:ring-4 focus:outline-none rounded-lg text-sm p-1 text-center bg-blue-600 hover:bg-blue-700 "
               >
                 set current month
-              </button>
+              </button>  
+              
+              
 
-              <div className="flex flex-row gap-1 w-full">
+              </div>
+
+      
+              <div className="flex flex-row m-1 p-1 justify-between w-full ">
 
                 <button
                   className="rounded-md w-20 h-7 bg-red-600 text-white "
                 >
-                  Reset
-                </button>                <button
+                  Cancel
+                </button>                
+                <button
                   //   onClick={handleCalculate}
-                  className="rounded-md w-20 h-7 bg-sky-500 text-white "
+                  className="rounded-md w-20 h-7 bg-sky-500 text-white mr-2"
                 >
-                  Calulate
+                  Done
                 </button>
-
-              </div>
-          </div>
+</div>
       </div>
     </div>
   ) : null;
