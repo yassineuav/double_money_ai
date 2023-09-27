@@ -200,9 +200,7 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal   }) => {
       }`}
     >
         <div className="flex flex-col gap-2 w-full rounded-lg shadow bg-gray-700 justify-center">
-            
             <div className="flex justify-between mb-4">
-            
             <h3 className="text-xl m-1 font-medium text-gray-900 dark:text-white">
               Add new Month
             </h3>
@@ -230,34 +228,73 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal   }) => {
           
            </div>
 
-           <div className="flex justify-center ">
-      <div className="  w-40 shadow-sm rounded-md overflow-y-auto h-48" >
-        <ul className="p-2 text-center">
-          {allMonths.map((month, index) => (
-            <li key={index} className="mb-1">
-              <button
-                onClick={() => setSelectedMonth(month)}
-                className={`py-2 w-full border-b border-gray-400 text-center ${month === selectedMonth ? 'bg-blue-500 text-white' : 'text-gray-400'}`}
-              >
-                {month}
-              </button>
-            </li>
-          ))}
-        </ul>
+          <div className="flex flex-col w-full items-center">
+              <div className="text-white text-md m-1">Select a Month</div>
+              <div className="w-40 shadow-sm rounded-md overflow-y-auto h-36 border border-gray-500" >
+                <ul className="p-1 text-center">
+                  {allMonths.map((month, index) => (
+                    <li key={index} className="h-8 text-center">
+                      <button
+                        onClick={() => setSelectedMonth(month)}
+                        className={`p-1 w-full h-8 border-b border-gray-400 text-center ${month === selectedMonth ? 'bg-blue-600 text-white' : 'text-gray-400'}`}
+                      >
+                        {month}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="text-white text-md m-1">Start & End Date</div>
+              
+              <div className="text-white text-md m-1">Compounding data</div>
+              <div className="border border-blue-300 rounded-md m-1">
+      <div className="grid grid-cols-2 gap-1 m-2">
+          <label className="block">
+            <span className="before:content-['*'] before:mr-1 before:text-red-500 block text-sm font-medium text-slate-400">
+              Your Amount
+            </span>
+            <input
+              onChange={(e) => {
+                // setAmount(e.target.value);
+              }}
+              type="text"
+              name="amount"
+              className="mt-1 p-1 w-32 bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-400 block w-full rounded-md text-sm focus:ring-1"
+              placeholder="your invest $"
+            />
+          </label>
+   
+          <label className="block">
+            <span className="before:content-['*'] before:mr-1 before:text-red-500 block text-sm font-medium text-slate-400">
+              Coumpound interest
+            </span>
+            <input
+              onChange={(e) => {
+                // setAmount(e.target.value);
+              }}
+              type="text"
+              name="compound"
+              className="mt-1 p-1  bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-400 block w-full rounded-md text-sm focus:ring-1"
+              placeholder="copmoud 2=100%"
+            />
+          </label>
+   
+        
       </div>
     </div>
-    <div className="flex flex-row m-1 p-1 justify-between w-full ">
-        <button onClick={onClose} className="rounded-md w-20 h-7 bg-red-600 text-white" >
-            Cancel
-        </button>                
-        <button
-            onClick={handleSaveMonth}
-            className="rounded-md w-20 h-7 bg-sky-500 text-white mr-2">
-              Done
-            </button>
-        </div>
+          </div>
+          <div className="flex flex-row m-1 p-1 justify-between w-full ">
+            <button onClick={onClose} className="rounded-md w-20 h-7 bg-red-600 text-white" >
+                Cancel
+            </button>                
+            <button
+                onClick={handleSaveMonth}
+                className="rounded-md w-20 h-7 bg-sky-500 text-white mr-2">
+                  Done
+                </button>
+            </div>
+          </div>
       </div>
-    </div>
   ) : null;
 };
 
@@ -304,12 +341,10 @@ const DeleteMonthModal = ({ closeModal, MonthData, openInfoModal } ) => {
           </button>
         </div>
         <div className="flex items-center justify-center mb-1">
-        <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-16 h-16 text-yellow-500"
-     
-    >
+              <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-16 h-16 text-yellow-500">
       <path fill="none" d="M0 0h24v24H0z" />
       <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" />
     </svg>
