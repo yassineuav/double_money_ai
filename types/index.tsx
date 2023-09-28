@@ -1,9 +1,11 @@
 export interface BalanceType {
     id: number;
+    uid?: string;
     target: string;
     current?: string;
     date?:string;
     day?:string;
+    check?:string
 }
 
 

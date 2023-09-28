@@ -82,16 +82,11 @@ const Settings = () => {
     const currentActiveMonth =  months.find(item => item.active === true);
 
     console.log("current active month", currentActiveMonth)
-    
     // calculate month
-    const newData = calculateMonthData("50")
-
+    const newData = calculateMonthData("50", "2", "10")
     // console.log("months data", newData)
-
     // update data doc to firebase
-    
     newData?.forEach(async (item) =>  {
-  
       const docRef = await addDoc(collection(db, "double_it"), item);
       console.log("Document written with ID: ", docRef.id); 
 
@@ -137,7 +132,7 @@ const Settings = () => {
     </div>
 
     <div className="grid grid-cols-1 gap-4">
-      { !data ? (
+      { data.length === 0 ? (
         <div className="flex flex-col gap-2 justify-center">
           <div className="text-white text-xlg">
             No Data for this month
