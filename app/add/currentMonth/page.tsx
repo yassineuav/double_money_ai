@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { calculateMonthData } from "../../data_server"
 import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from 'firebase/firestore';
 import firebase_app from '@/components/firebaseConfig';
-import { BalanceType, MonthsType } from '@/types';
+import { BalanceType } from '@/types';
 
 const db = getFirestore(firebase_app)
 

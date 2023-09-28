@@ -49,7 +49,7 @@ const Months = () => {
     setSelectedMonth(month);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     async function fetchMonths() {
       const querySnapshot = await getDocs(collection(db, "months"));
       let newData: MonthsType[] = [];
