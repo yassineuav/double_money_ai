@@ -51,7 +51,7 @@ export const calculateMonthData = (seed:string, interst:string, double:string) =
     // Convert the number to a currency format
     const weekdays = listWeekdaysToEndOfMonth();
     for (var i = 0; i < weekdays.length; i++) {
-      newData = [...newData, {"id":i, "target":toMoney(balance), "check": "pending","current":toMoney(100), "day":weekdays[i].day, "date":weekdays[i].date.replace('2023', '')} ];
+      newData = [...newData, {"id":i, "target":toMoney(balance), "check": "pending","current":toMoney(200), "day":weekdays[i].day, "date":weekdays[i].date.replace('2023', '')} ];
       balance = balance * compoundInterst;
       // console.log("day", weekdays[i].date, weekdays[i].date)
     }

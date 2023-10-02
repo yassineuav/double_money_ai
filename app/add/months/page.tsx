@@ -19,6 +19,7 @@ import React, { useEffect, useRef, useState } from "react";
 const db = getFirestore(firebase_app);
 
 const Months = () => {
+  
   const [months, setMonths] = useState<MonthsType[]>([]);
   const [seletedMonth, setSelectedMonth] = useState<MonthsType>();
   const [loading, setloading] = useState(true);
@@ -236,7 +237,7 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
 
   const handleSaveGoalData = () => {
     
-    const goal = calculateMonthData("100", "2", "10");
+    const goal = calculateMonthData("400", "2", "10");
     console.log("goal data: ", goal);
   }
 

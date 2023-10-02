@@ -11,7 +11,7 @@ const CurrentMonth = () => {
     const [data, setData] = useState<BalanceType[]>([]);
 
     const  handleSaveDataGaol = async () =>  {
-        const goal = calculateMonthData("100", "2", "10");
+        const goal = calculateMonthData("400", "2", "10");
         // console.log("goal data: ", goal);
         goal?.forEach(async (item) => {
             const docRef = await addDoc(collection(db, "double_it"), item);
