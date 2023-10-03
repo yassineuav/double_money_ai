@@ -172,38 +172,25 @@ const Months = () => {
 
 export default Months;
 
-const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
-  const allMonths = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
-  const [selectedMonth, setSelectedMonth] = useState("");
+const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
+  
   const [doublingTime, setDoublingTime] = useState("");
   const [balance, setSeedBalance] = useState("")
   const [interst, setCompoundInterst] = useState("")
+  const [startDate, setStartDate ] = useState("")
 
 
   const createGaolData = async () => {
     try {
       const docRef = await addDoc(collection(db, "months"), {
-        month: selectedMonth,
+        // month: selectedMonth,
       });
       // console.log("Document written with ID: ", docRef.id);
       openInfoModal({
         id: 1,
         title: "Data Saved Successfully",
-        message: `The ${selectedMonth} month saved succefully (@_-)`,
+        message: `The month saved succefully (@_-)`,
         isSuccess: true,
       });
       onClose();
@@ -213,12 +200,11 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
   };
 
   const handleSaveMonth = async () => {
-    
     const querySnapshot = await getDocs(collection(db, "months"));
     let isExist = false;
     querySnapshot.forEach((doc) => {
       // console.log(`${doc.id} => ${doc.data().month}`);
-      if (doc.data().month === selectedMonth) {
+      if (doc.data().month === "") {
         isExist = true;
       }
     });
@@ -228,7 +214,7 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
       openInfoModal({
         id: 1,
         title: "Already Exist!!",
-        message: `The ${selectedMonth} month is already exist!`,
+        message: `The month is already exist!`,
         isSuccess: false,
       });
       // console.log("month is already exist ", isExist)
@@ -236,18 +222,23 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
   };
 
   const handleSaveGoalData = () => {
-    
-    const goal = calculateMonthData("400", "2", "10");
-    console.log("goal data: ", goal);
+    const goal = calculateMonthData({seed:balance, interst:interst, double:"",start_date:startDate, end_date:""});
+    goal?.forEach(async (item) => {
+
+        const docRef = await addDoc(collection(db, "double_it"), item);
+        await setDoc(docRef, { ...item, uid: docRef.id });
+        console.log("Document written with ID: ", docRef.id);
+      })
+    // console.log("data", {"start date":startDate, "balance":balance, "interst":interst})
   }
 
 
   return isOpen ? (
+    
     <div
       className={`fixed z-50 w-full p-4 inset-0 flex items-center justify-center max-h-full${
-        isOpen ? "opacity-100" : "opacity-0 pointer-events-none "
-      }`}
-    >
+        isOpen ? "opacity-100" : "opacity-0 pointer-events-none " }`} 
+      >
       <div className="flex flex-col gap-2 w-full rounded-lg shadow bg-gray-700 justify-center">
         <div className="flex justify-between mb-4">
           <h3 className="text-xl m-1 font-medium text-gray-900 dark:text-white">
@@ -256,61 +247,55 @@ const ModalMonthPicker = ({ isOpen, onClose, openInfoModal }) => {
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-200 border border-gray-500 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center hover:bg-gray-600 hover:text-white"
-          >
+            className="text-gray-200 border border-gray-500 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center hover:bg-gray-600 hover:text-white" >
             <svg
               className="w-3 h-3"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 14 14"
-            >
+              viewBox="0 0 14 14" >
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
           </button>
         </div>
         <div className="flex flex-col w-full items-center">
-          <div className="text-white text-md m-1">Select a Month</div>
-          <div className="w-40 shadow-sm rounded-md overflow-y-auto h-36 border border-gray-500">
-            <ul className="p-1 text-center">
-              {allMonths.map((month, index) => (
-                <li key={index} className="h-8 text-center">
-                  <button
-                    onClick={() => setSelectedMonth(month)}
-                    className={`p-1 w-full h-8 border-b border-gray-400 text-center ${
-                      month === selectedMonth
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    {month}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-1 m-2">
-            <div className="text-white text-md m-1 text-center">Double times</div>
-            <label className="flex flex-col items-center border border-gray-500 p-2 rounded-md ">
+            <div className="text-white text-md m-1 text-center">Start/End Date</div>
+          
+          <div className="flex flex-row gap-2 p-2 m-2 items-center border border-gray-500 rounded-md">
+            
+            <label className="flex flex-col ">
               <span className="before:content-['*'] before:mr-1 before:text-red-500 block text-sm font-medium text-slate-400">
-                Number of Doubling times
+                Start Date
               </span>
               <input
-                onChange={(e) => {
-                  setDoublingTime(e.target.value);
-                }}
-                type="number"
-                name="double_times"
+                // setDoublingTime(e.target.value);
+                onChange={(e) => {setStartDate(e.target.value)}}
+                type="text"
+                name="start_date"
                 className="mt-1 p-1 w-28 bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 block rounded-md text-sm text-white"
-                placeholder="double times"
+                placeholder="10/01/2023"
               />
             </label>
+
+            <label className="flex flex-col items-centerp-2 rounded-md "></label>
+            
+            {/* <label className="flex flex-col items-centerp-2 rounded-md ">
+              <span className="before:content-['*'] before:mr-1 before:text-red-500 block text-sm font-medium text-slate-400">
+                End Date
+              </span>
+              <input         
+                // onChange={(e) => { setStartDate(e.target.value);}}
+                type="text"
+                name="end_date"
+                className="mt-1 p-1 w-28 bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 block rounded-md text-sm text-white"
+                placeholder="10/30/2023"
+              /> </label> */}
+            
           </div>
 
           <div className="text-white text-md m-1">Compounding Interst Data</div>

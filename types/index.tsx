@@ -1,6 +1,6 @@
 export interface BalanceType {
     id: number;
-    uid?: string;
+    uid: string;
     target: string;
     current?: string;
     date?:string;

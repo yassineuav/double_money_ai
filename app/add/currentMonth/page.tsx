@@ -11,7 +11,7 @@ const CurrentMonth = () => {
     const [data, setData] = useState<BalanceType[]>([]);
 
     const  handleSaveDataGaol = async () =>  {
-        const goal = calculateMonthData("400", "2", "10");
+        const goal = calculateMonthData({seed:"200", interst:"2", double:"10", start_date:"10/02/2023", end_date: "11/01/2023"});
         // console.log("goal data: ", goal);
         goal?.forEach(async (item) => {
             const docRef = await addDoc(collection(db, "double_it"), item);
@@ -56,8 +56,8 @@ const CurrentMonth = () => {
                     {data.length !== 0 ? (<div className='grid grid-cols-5 gap-1'>{data.map((item) => (
                         <div key={item.id} className='border border-gray-500 text-sm text-center m-1 p-1 rounded-md'>
                             {item.date?.replace('Oct', '')}
-                        </div>
-                        ))}</div>) :(<div className=' ring-pink-400 mb-4 text-gray-300'>no data</div>)}
+                        </div>))
+                        }</div>):(<div className=' ring-pink-400 mb-4 text-gray-300'>no data</div>)}
                         
                     <div className='text-gray-400 font-bold mb-4 border border-gray-400 rounded-md p-2'
                     onClick={handleFetchData}>fetch data</div>            

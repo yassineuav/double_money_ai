@@ -13,8 +13,7 @@ const InfoModal = ({ closeModal, info }:InfoModalProps ) => {
           <button
             type="button"
             className="text-white hover:text-gray-400"
-            onClick={closeModal}
-          >
+            onClick={closeModal} >
             <svg
               className="w-10 h-10"
               fill="currentColor"

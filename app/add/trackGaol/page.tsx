@@ -1,10 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, updateDoc } from 'firebase/firestore';
 import firebase_app from '@/components/firebaseConfig';
 import { BalanceType, MessageType } from '@/types';
 import LoadingSpinner from '@/components/loadingSpinner';
 import InfoModal from '@/components/infoModal';
+import toMoney from '@/app/data_server';
 
 
 const db = getFirestore(firebase_app)
@@ -48,15 +49,12 @@ const trackGaol = () => {
         setloading(false);
     }
 
-
     useEffect(() => { 
         handleFetchData()
     }, []);
 
-
-
     return (
-        <div className="flex mt-12 h-screen w-screen">
+        <div className="flex h-screen items-center">
         {isModalOpen && 
         <ModalEditTarget
             targetInfo={editTarget}
@@ -67,11 +65,13 @@ const trackGaol = () => {
          {isInfoModalOpen && (
           <InfoModal closeModal={handleInfoModalToggle} info={infoModalData} />
         )}
-            { loading ?  <div className='w-screen items-center'><LoadingSpinner /></div> :
-            <div className="flex flex-col p-2 ">
-            
+            { loading ?  <div className='w-screen h-screen items-center'><LoadingSpinner /></div> :
+            <div className="flex flex-col p-2 md:w-full h-screen ">
+              {/* <div className='mt-20 text-white text-md border border-gray-400 rounded-md'>
+                    {JSON.stringify(data)}
+                  </div> */}
                 {data.length !== 0 ? (
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 h-screen'>
                     {data.map((item, index) => (
                     <div key={index} 
                         className='w-full shadow-md shadow-slate-500 mb-2 rounded-md'>
@@ -132,19 +132,32 @@ const trackGaol = () => {
 export default trackGaol;
 
 
-const ModalEditTarget = ({ isOpen, onClose, openInfoModal, targetInfo }) => {
+const ModalEditTarget = () => {
+    
     const [EditedAmount, setEditedAmount] = useState("")
     
     const updateGaol = async () => {
         try {
-        //   const docRef = await addDoc(collection(db, "months"), {
-        //     month: selectedMonth,
-        //   });
+          //   const docRef = await addDoc(collection(db, "months"), {
+          //     month: selectedMonth,
+          //   });
           // console.log("Document written with ID: ", docRef.id);
+          // update data to data base
+          // console.log("old data", targetInfo)
+          // targetInfo = {...targetInfo, current:EditedAmount}
+          // console.log("updated data", targetInfo)
+          
+          let amount = toMoney(parseInt(EditedAmount))
+          const editAmountRef = doc(db, "double_it", targetInfo.uid);
+          await updateDoc(editAmountRef, {
+            current: amount
+          });
+
+          
           openInfoModal({
             id: 1,
             title: "Data Saved Successfully",
-            message: `The ${targetInfo.current} month saved succefully (@_-)`,
+            message: `The ${amount} month saved succefully (@_-)`,
             isSuccess: true,
           });
           onClose();
@@ -195,7 +208,7 @@ const ModalEditTarget = ({ isOpen, onClose, openInfoModal, targetInfo }) => {
               </span>
               <input
                 onChange={(e) => {
-                //   setDoublingTime(e.target.value);
+                  setEditedAmount(e.target.value);
                 }}
                 name="current"
                 className="mt-1 p-1 w-28 bg-gray-500 border shadow-sm border-slate-300 placeholder-slate-200 focus:outline-none focus:border-sky-500 block rounded-md text-sm text-white"
