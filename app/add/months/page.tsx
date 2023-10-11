@@ -51,6 +51,7 @@ const Months = () => {
   };
 
   useEffect(() => { 
+
     async function fetchMonths() {
       const querySnapshot = await getDocs(collection(db, "months"));
       let newData: MonthsType[] = [];
@@ -141,7 +142,7 @@ const Months = () => {
         )}
         <div
           onClick={handleInfoModalToggle}
-          className="border border-blue-500 rounded-md m-1 p-1 text-sm bg-blue-700 text-white"
+          className="border border-blue-500 rounded-md mt-32 p-1 text-sm bg-blue-700 text-white"
         >
           {"show test modal info"}
         </div>

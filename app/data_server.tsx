@@ -49,6 +49,7 @@ export const calculateMonthData = (data:{seed:string, interst:string, double:str
   try {
 
     let balance = parseInt(data.seed);
+    let current = parseInt(data.seed);
     let compoundInterst = parseInt(data.interst);
     let doubleTimes = parseInt(data.double);
     // console.log("balance", balance);
@@ -56,8 +57,15 @@ export const calculateMonthData = (data:{seed:string, interst:string, double:str
     // Convert the number to a currency format
     const weekdays = listWeekdays(data.start_date, data.end_date);
     for (var i = 0; i < weekdays.length; i++) {
-      newData = [...newData, {"id":i, "target":toMoney(balance), "check": "pending","current":toMoney(200), "day":weekdays[i].day, "date":weekdays[i].date.replace('2023', '')} ];
-      balance = balance * compoundInterst;
+      newData = [...newData, 
+        {"id":i,
+        "uid":"", 
+        "target":toMoney(balance), 
+        "check": "pending",
+        "current":toMoney(current), 
+        "day":weekdays[i].day, 
+        "date":weekdays[i].date.replace('2023', '')} ];
+      balance *=  compoundInterst;
       // console.log("day", weekdays[i].date, weekdays[i].date)
     }
     return newData

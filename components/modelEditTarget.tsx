@@ -5,6 +5,7 @@ import firebase_app from './firebaseConfig';
 
 
 const ModelEditTarget = ({ isOpen, onClose, openInfoModal, targetInfo }) => {
+    
     const db = getFirestore(firebase_app)
     const [EditedAmount, setEditedAmount] = useState("")
     
@@ -23,6 +24,7 @@ const ModelEditTarget = ({ isOpen, onClose, openInfoModal, targetInfo }) => {
             message: `The ${amount} month saved succefully (@_-)`,
             isSuccess: true,
           });
+          
           onClose();
         } catch(e){ console.error("Error adding document: ", e);}
       };
